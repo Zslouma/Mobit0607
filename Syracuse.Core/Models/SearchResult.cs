@@ -202,6 +202,30 @@ namespace Syracuse.Mobitheque.Core.Models
 
         public string[] ZIPURL { get; set; } = null;
 
+        [JsonProperty("eventCategory_multi_store")]
+
+        public string[] eventLabel_store { get; set; } = null;
+
+        [JsonProperty("CategoryColor_store")]
+
+        public string[] CategoryColor_store { get; set; } = null;
+
+        [JsonProperty("CategoryTextColor_store")]
+
+        public string[] CategoryTextColor_store { get; set; } = null;
+
+
+        [JsonProperty("imageUrl_store")]
+
+        public string[] imageUrl_store { get; set; } = null;
+
+
+
+        [JsonProperty("fullDescription_store")]
+
+        public string[] fullDescription_store { get; set; } = null;
+
+
         public bool HasZipUrl
         {
             get { return ZIPURL != null && ZIPURL[0] != null; }
@@ -333,11 +357,11 @@ namespace Syracuse.Mobitheque.Core.Models
         }
         [JsonProperty("SubjectLocation")]
         public string[] SubjectLocation { get; set; }
-        [JsonProperty("DateStart_idx")]
+        [JsonProperty("startDate_date")]
         public string[] DateStart_idx { get; set; }
-        [JsonProperty("DateEnd_idx")]
+        [JsonProperty("endDate_date")]
         public string[] DateEnd_idx { get; set; }
-        [JsonProperty("DateDisplay")]
+        [JsonProperty("DateDisplay_store")]
         public string[] DateDisplay { get; set; }
         public string DateTime_String
         { get
@@ -387,7 +411,7 @@ namespace Syracuse.Mobitheque.Core.Models
 
         public bool HaveDateTime { 
             get{
-                return DateTime_String != null && DateTime_String != "";
+                return DateDisplay != null;
             } 
         }
 

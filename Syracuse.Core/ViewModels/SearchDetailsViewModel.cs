@@ -17,7 +17,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
     {
         private readonly IRequestService requestService;
 
-        private readonly IMvxNavigationService navigationService ;
+        private readonly IMvxNavigationService navigationService;
 
         private SearchLibraryResult library;
 
@@ -60,9 +60,10 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         public int Position
         {
             get => this.position;
-            set{
+            set
+            {
                 this.DisplayPosition = (value + 1).ToString() + " / " + this.NbrResults;
-                SetProperty(ref this.position, value); 
+                SetProperty(ref this.position, value);
             }
         }
 
@@ -120,6 +121,14 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             get => this.inLoadMore;
             set { SetProperty(ref this.inLoadMore, value); }
         }
+
+        private bool isAgenda = true;
+        public bool IsAgenda
+        {
+            get => this.isAgenda;
+            set { SetProperty(ref this.isAgenda, value); }
+        }
+
 
         public SearchLibraryResult Library
         {
@@ -188,7 +197,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         private string setStar(long star)
         {
-            if (star == 1)      return "https://upload.wikimedia.org/wikipedia/commons/d/dd/Star_rating_1_of_5.png";
+            if (star == 1) return "https://upload.wikimedia.org/wikipedia/commons/d/dd/Star_rating_1_of_5.png";
             else if (star == 2) return "https://upload.wikimedia.org/wikipedia/commons/9/95/Star_rating_2_of_5.png";
             else if (star == 3) return "https://upload.wikimedia.org/wikipedia/commons/2/2f/Star_rating_3_of_5.png";
             else if (star == 4) return "https://upload.wikimedia.org/wikipedia/commons/f/fa/Star_rating_4_of_5.png";
@@ -282,7 +291,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
                 }
                 resultTempo.DisplayValues.SeekForHoldings = resultTempo.SeekForHoldings && this.ReversIsKm;
-                Console.WriteLine("resultTempo.Resource.RscBase : "+ resultTempo.Resource.RscBase);
+                Console.WriteLine("resultTempo.Resource.RscBase : " + resultTempo.Resource.RscBase);
                 await PerformSearch(resultTempo.Resource.RscId, resultTempo.Resource.RscBase);
                 this.BuildHoldingsStatements();
                 this.BuildHoldings();
@@ -305,88 +314,92 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             try
             {
-            this.IsBusy = true;
-            for (int i = start; i <= end; i++)
-            {
-                try
+                this.IsBusy = true;
+                for (int i = start; i <= end; i++)
                 {
-                Console.WriteLine("FormateToCarrousel :"+i);
-                if (this.ItemsSource[i].Resource.Desc != null)
-                    this.ItemsSource[i].DisplayValues.Desc = this.ItemsSource[i].Resource.Desc;
-                this.ItemsSource[i].DisplayValues.Star = this.setStar(this.ItemsSource[i].Resource.AvNt);
-                if (this.ItemsSource[i].DisplayValues.Star == null)
-                {
-                    this.ItemsSource[i].DisplayValues.DisplayStar = false;
-                }
-                else
-                {
-                    this.ItemsSource[i].DisplayValues.DisplayStar = true;
-                }
-                if (this.ItemsSource[i].HasViewerDr)
-                {
-                    if (this.user == null)
-                    {
-                        this.user = await App.Database.GetActiveUser();
-                    }
-                    // Génération des url du Viewer DR 
                     try
                     {
-                        if (this.ItemsSource[i].FieldList.NumberOfDigitalNotices != null && this.ItemsSource[i].FieldList.NumberOfDigitalNotices.Length > 0 && this.ItemsSource[i].FieldList.NumberOfDigitalNotices[0] > 0)
+                        Console.WriteLine("FormateToCarrousel :" + i);
+                        if (this.ItemsSource[i].Resource.Desc != null)
+                            this.ItemsSource[i].DisplayValues.Desc = this.ItemsSource[i].Resource.Desc;
+                        this.ItemsSource[i].DisplayValues.Star = this.setStar(this.ItemsSource[i].Resource.AvNt);
+                        if (this.ItemsSource[i].DisplayValues.Star == null)
                         {
-                            this.ItemsSource[i].FieldList.UrlViewerDR = this.user.LibraryUrl + "/digital-viewer/c-" + this.ItemsSource[i].FieldList.Identifier[0];
-                        }
-                        else if (this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint != null && this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint.Length > 0 && Convert.ToInt32(this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint[0]) > 0)
-                        {
-                            this.ItemsSource[i].FieldList.UrlViewerDR = this.user.LibraryUrl + "/digital-viewer/d-" + this.ItemsSource[i].FieldList.Identifier[0];
+                            this.ItemsSource[i].DisplayValues.DisplayStar = false;
                         }
                         else
                         {
-                            this.ItemsSource[i].HasDigitalReady = false;
-                            this.ItemsSource[i].HasViewerDr = false;
-                            this.ItemsSource[i].FieldList.NumberOfDigitalNotices = null;
-                            this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint = null;
+                            this.ItemsSource[i].DisplayValues.DisplayStar = true;
                         }
-                    }
-                    catch (Exception)
-                    {
-                        this.ItemsSource[i].HasDigitalReady = false;
-                        this.ItemsSource[i].HasViewerDr = false;
-                        this.ItemsSource[i].FieldList.NumberOfDigitalNotices = null;
-                        this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint = null;
-                    }
+                        if (this.ItemsSource[i].HasViewerDr)
+                        {
+                            if (this.user == null)
+                            {
+                                this.user = await App.Database.GetActiveUser();
+                            }
+                            // Génération des url du Viewer DR 
+                            try
+                            {
+                                if (this.ItemsSource[i].FieldList.NumberOfDigitalNotices != null && this.ItemsSource[i].FieldList.NumberOfDigitalNotices.Length > 0 && this.ItemsSource[i].FieldList.NumberOfDigitalNotices[0] > 0)
+                                {
+                                    this.ItemsSource[i].FieldList.UrlViewerDR = this.user.LibraryUrl + "/digital-viewer/c-" + this.ItemsSource[i].FieldList.Identifier[0];
+                                }
+                                else if (this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint != null && this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint.Length > 0 && Convert.ToInt32(this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint[0]) > 0)
+                                {
+                                    this.ItemsSource[i].FieldList.UrlViewerDR = this.user.LibraryUrl + "/digital-viewer/d-" + this.ItemsSource[i].FieldList.Identifier[0];
+                                }
+                                else
+                                {
+                                    this.ItemsSource[i].HasDigitalReady = false;
+                                    this.ItemsSource[i].HasViewerDr = false;
+                                    this.ItemsSource[i].FieldList.NumberOfDigitalNotices = null;
+                                    this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint = null;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                this.ItemsSource[i].HasDigitalReady = false;
+                                this.ItemsSource[i].HasViewerDr = false;
+                                this.ItemsSource[i].FieldList.NumberOfDigitalNotices = null;
+                                this.ItemsSource[i].FieldList.DigitalReadyIsEntryPoint = null;
+                            }
 
-                }
-                this.ItemsSource[i].DisplayValues.SeekForHoldings = this.ItemsSource[i].SeekForHoldings && this.ReversIsKm;
-                await PerformSearch(this.ItemsSource[i].Resource.RscId, this.ItemsSource[i].Resource.RscBase);
-                this.BuildHoldingsStatements();
-                this.BuildHoldings();
-                this.ItemsSource[i].DisplayValues.Library = this.Library;
-                this.ItemsSource[i].DisplayValues.Library.success = this.ItemsSource[i].DisplayValues.Library.success && this.ItemsSource[i].DisplayValues.SeekForHoldings;
-                if (this.ItemsSource[i].DisplayValues.Library.success)
-                {
-                    if (this.ItemsSource[i].DisplayValues.Library.Dataa.fieldList.sys_base.Contains("DILICOM"))
-                    {
-                        this.ItemsSource[i].FieldList.GetZipLabel = ApplicationResource.OnlineConsult;
-                        this.ItemsSource[i].FieldList.ZIPURL = new string[] { this.ItemsSource[i].FriendlyUrl.ToString() };
-                        this.ItemsSource[i].FieldList.GetZipUri = this.ItemsSource[i].FriendlyUrl.ToString();
+                        }
+                        this.ItemsSource[i].DisplayValues.SeekForHoldings = this.ItemsSource[i].SeekForHoldings && this.ReversIsKm;
+                         
+                        await PerformSearch(this.ItemsSource[i].Resource.RscId, this.ItemsSource[i].Resource.RscBase);
+                        if (this.itemsSource[i].Resource.RscBase == "CALENDAR")
+                        { this.IsAgenda = false; }
+                        this.BuildHoldingsStatements();
+                        this.BuildHoldings();
+                        this.ItemsSource[i].DisplayValues.Library = this.Library;
+                        this.ItemsSource[i].DisplayValues.Library.success = this.ItemsSource[i].DisplayValues.Library.success && this.ItemsSource[i].DisplayValues.SeekForHoldings;
+                        if (this.ItemsSource[i].DisplayValues.Library.success)
+                        {
+                            if (this.ItemsSource[i].DisplayValues.Library.Dataa.fieldList.sys_base.Contains("DILICOM"))
+                            {
+                                this.ItemsSource[i].FieldList.GetZipLabel = ApplicationResource.OnlineConsult;
+                                this.ItemsSource[i].FieldList.ZIPURL = new string[] { this.ItemsSource[i].FriendlyUrl.ToString() };
+                                this.ItemsSource[i].FieldList.GetZipUri = this.ItemsSource[i].FriendlyUrl.ToString();
+                            }
+
+                        }
+                        
                     }
-                   
-                }
-                }
-                catch (Exception e)
-                {
+                    catch (Exception e)
+                    {
                         var tempo = this.ItemsSource[i];
                         Console.WriteLine(e.Message);
-                }
+                    }
 
-            }
-            var result = this.ItemsSource;
-            this.ItemsSource = new ObservableCollection<Result>(result);
-            await this.RaisePropertyChanged(nameof(ItemsSource));
-            if (endIsBusy)
-            {
-                this.IsBusy = false;
-            }
+                }
+                var result = this.ItemsSource;
+                this.ItemsSource = new ObservableCollection<Result>(result);
+                await this.RaisePropertyChanged(nameof(ItemsSource));
+                if (endIsBusy)
+                {
+                    this.IsBusy = false;
+                }
 
             }
             catch (Exception e)
@@ -413,6 +426,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                             if (String.IsNullOrEmpty(itemValue))
                             {
                                 DisplayHoldingsStatements.Add(value.Key, false);
+                              
                                 continue;
                             }
                             else
@@ -447,10 +461,11 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                         if (value.Value)
                         {
                             var itemObject = item.GetType().GetProperty(value.Key)?.GetValue(item, null);
-                            string itemValue = itemObject != null? itemObject.ToString() : "";
+                            string itemValue = itemObject != null ? itemObject.ToString() : "";
                             if (String.IsNullOrEmpty(itemValue))
                             {
                                 DisplayHoldings.Add(value.Key, false);
+                              
                                 continue;
                             }
                             else
@@ -512,7 +527,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 return uri;
             }
-            
+
         }
 
         public async Task LoadMore(bool endIsBusy = true)
@@ -548,7 +563,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 if (search == null)
                 {
                     search = this.Query;
-                } else
+                }
+                else
                 {
                     this.Query = search;
                 }
@@ -589,7 +605,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     await PerformSearch(null);
                     this.DisplayAlert(ApplicationResource.Success, ApplicationResource.SuccessBookingRequest, ApplicationResource.ButtonValidation);
                 }
-                }
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

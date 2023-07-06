@@ -238,6 +238,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     Page = this.page,
                     SortField = "DateStart_sort",
                     SortOrder = 1,
+                    InjectFields = true,
                 };
             }
             else
@@ -321,6 +322,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 ScenarioCode = this.eventsScenarioCode,
                 Page = this.page,
+                InjectFields = true,
                
             };
             var tempo = new SearchDetailsParameters()

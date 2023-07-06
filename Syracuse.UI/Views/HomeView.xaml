@@ -46,21 +46,7 @@
                                         <StackLayout Orientation="Vertical" Padding="5, 0, 5, 0">
                                             <Grid HeightRequest="90">
                                                 <ffimageloading:CachedImage VerticalOptions="Fill" HorizontalOptions="Fill" ErrorPlaceholder="https://graphisme-syracuse.archimed.fr/basicfilesdownload.ashx?itemGuid=05E01B10-51AE-4EDF-AEF2-64E696038A71"  Aspect="AspectFill" Source="{Binding FieldList.Image}" HeightRequest="90"/>
-                                                <AbsoluteLayout Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                                                    <ActivityIndicator  Color="Gray"  AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1">
-                                                        <ActivityIndicator.Triggers >
-                                                            <DataTrigger TargetType="ActivityIndicator" Binding="{Binding Source={x:Reference image}, Path=IsLoading}" Value="True">
-                                                                <Setter Property="IsRunning" Value="True"/>
-                                                                <Setter Property="IsVisible" Value="True"/>
-                                                            </DataTrigger>
-
-                                                            <DataTrigger TargetType="ActivityIndicator" Binding="{Binding Source={x:Reference image}, Path=IsLoading}" Value="False">
-                                                                <Setter Property="IsRunning" Value="False"/>
-                                                                <Setter Property="IsVisible" Value="False"/>
-                                                            </DataTrigger>
-                                                        </ActivityIndicator.Triggers>
-                                                    </ActivityIndicator>
-                                                </AbsoluteLayout>
+                                             
                                             </Grid>
                                             <StackLayout  Orientation="Vertical">
                                                 <Label Text="{Binding FieldList.Title[0]}" MaxLines="2" FontAttributes="Bold" FontSize="20" TextColor="{d:DynamicResource DarkTextColor}"/>

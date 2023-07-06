@@ -25,26 +25,26 @@ namespace Syracuse.Mobitheque.UI.Views
             var model = e.CurrentItem as Result;
         }
 
-        private void carouselView_PositionChanged(object sender, PositionChangedEventArgs e)
+        private async void carouselView_PositionChanged(object sender, PositionChangedEventArgs e)
         {
             var CurrentPosition = e.CurrentPosition;
-            this.ViewModel.RaiseAllPropertiesChanged();
+            await this.ViewModel.RaiseAllPropertiesChanged();
             if (e.CurrentPosition > e.PreviousPosition)
             {
-                if (e.CurrentPosition+1 >= this.ViewModel.EndDataPosition && e.CurrentPosition + 1 < this.ViewModel.ItemsSource.Count )
+                if (e.CurrentPosition + 1 >= this.ViewModel.EndDataPosition && e.CurrentPosition + 1 < this.ViewModel.ItemsSource.Count)
                 {
                     this.ViewModel.EndDataPosition = this.ViewModel.EndDataPosition + 10 < this.ViewModel.ItemsSource.Count ? this.ViewModel.EndDataPosition + 10 : this.ViewModel.ItemsSource.Count - 1;
-                    this.ViewModel.FormateToCarrousel(e.CurrentPosition, this.ViewModel.EndDataPosition);
+                  await  this.ViewModel.FormateToCarrousel(e.CurrentPosition, this.ViewModel.EndDataPosition);
                 }
             }
             else
             {
-                if (e.CurrentPosition <=  this.ViewModel.StartDataPosition && e.CurrentPosition > 0 )
+                if (e.CurrentPosition <= this.ViewModel.StartDataPosition && e.CurrentPosition > 0)
                 {
                     this.ViewModel.StartDataPosition = this.ViewModel.StartDataPosition - 10 >= 0 ? this.ViewModel.StartDataPosition - 10 : 0;
-                    this.ViewModel.FormateToCarrousel( this.ViewModel.StartDataPosition, e.CurrentPosition);
+                    await this.ViewModel.FormateToCarrousel(this.ViewModel.StartDataPosition, e.CurrentPosition);
                 }
-                if (e.CurrentPosition < e.PreviousPosition-1 )
+                if (e.CurrentPosition < e.PreviousPosition - 1)
                 {
                     this.carouselView.Position = e.PreviousPosition;
                     CurrentPosition = e.PreviousPosition;
@@ -54,22 +54,7 @@ namespace Syracuse.Mobitheque.UI.Views
             Console.WriteLine("OpenBrowser_OnClicked " + e.CurrentPosition);
             this.ViewModel.IsPositionVisible = true;
         }
-        private async void OnCarouselViewRemainingItemsThresholdReached(object sender, EventArgs e)
-        {
-            if (int.Parse(this.ViewModel.NbrResults) > this.ViewModel.ItemsSource.Count)
-            {
-            
-                if (!this.ViewModel.InLoadMore)
-                {
-                    await this.ViewModel.LoadMore();
-                }
-            }
-            else
-            {
-                carouselView.RemainingItemsThresholdReached -= OnCarouselViewRemainingItemsThresholdReached;
-            }
-
-        }
+       
         private async void OpenBrowser_OnClicked(object sender, EventArgs e)
         {
             string url = ((Button)sender).CommandParameter as string;
@@ -98,7 +83,7 @@ namespace Syracuse.Mobitheque.UI.Views
             {
                 await DisplayAlert(ApplicationResource.Warning, String.Format(ApplicationResource.ErrorOccurred), ApplicationResource.ButtonValidation);
             }
-            
+
         }
 
         private async void HoldingButton_Clicked(object sender, EventArgs e)
@@ -112,7 +97,7 @@ namespace Syracuse.Mobitheque.UI.Views
                 {
                     holdiongplaces.Add(item.Libelle);
                 }
-                string value = await DisplayActionSheet(ApplicationResource.HoldingLibraryChoice, ApplicationResource.Cancel, null, holdiongplaces.ToArray() );
+                string value = await DisplayActionSheet(ApplicationResource.HoldingLibraryChoice, ApplicationResource.Cancel, null, holdiongplaces.ToArray());
                 if (value == ApplicationResource.Cancel)
                 {
                     return;
@@ -124,6 +109,8 @@ namespace Syracuse.Mobitheque.UI.Views
                         if (item.Libelle == value)
                         {
                             data.HoldingPlace = item.Code;
+                            data.Site = item.Libelle;
+                            data.SiteCode = item.Code;
                         }
                     }
                 }
@@ -161,6 +148,9 @@ namespace Syracuse.Mobitheque.UI.Views
             var res = this.DisplayAlert(title, message, buttonYes, buttonNo);
             return res;
         }
+
+
+        
 
 
     }
